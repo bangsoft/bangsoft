@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Git Clone') {
       steps {
-        git branch: 'main', url: 'https://github.com/bangsoft/bangsoft.git', credentialsId: 'real-key'
+        git branch: 'deploy', url: 'https://github.com/bangsoft/bangsoft.git', credentialsId: 'real-key'
       }
     }
     stage('Build Docker Image') {
