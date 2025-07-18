@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  jenkins:
+    image: 'jenkins/jenkins:lts'
+    user: root
+    privileged: true
+    container_name: jenkins
+    ports:
+      - '9090:8080'    # Jenkins UI
+      - '50000:50000'  # JNLP 연결
+    volumes:
+      - '/home/ubuntu/jenkins-data:/var/jenkins_home'
+      - '/var/run/docker.sock:/var/run/docker.sock' # Docker-in-Docker (보안 주의)
+    environment:
+      - TZ=Asia/Seoul
+    networks:
+      - server_network
+
+  vue-app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vue-app
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # 로컬 폴더 변경 감지 오류 방지 (개발용)
+    networks:
+      - server_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./backend/.env  # 환경변수 관리 권장
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - server_network
+
+networks:
+  server_network:
+    driver: bridge
