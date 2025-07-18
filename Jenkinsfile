@@ -1,25 +1,15 @@
 pipeline {
   agent any
 
-  environment {
-    DOCKER_CREDENTIALS = credentials('dockerhub-credentials-id') // 도커허브 아이디
-  }
-
   stages {
     stage('Git Clone') {
       steps {
-        git url: 'https://github.com/USER/REPO.git', credentialsId: 'github-token-id', branch: 'main'
+        git url: 'https://github.com/ORG/REPO.git', credentialsId: 'mygithubtoken'
       }
     }
     stage('Build Docker Image') {
       steps {
         sh 'docker-compose build'
-      }
-    }
-    stage('Push Docker Image (옵션)') {
-      steps {
-        sh 'docker login -u $DOCKER_CREDENTIALS_USR -p $DOCKER_CREDENTIALS_PSW'
-        sh 'docker-compose push'
       }
     }
     stage('Deploy Service') {
