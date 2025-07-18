@@ -1,22 +1,6 @@
 version: '3.7'
 
 services:
-  jenkins:
-    image: 'jenkins/jenkins:lts'
-    user: root
-    privileged: true
-    container_name: jenkins
-    ports:
-      - '9090:8080'    # Jenkins UI
-      - '50000:50000'  # JNLP 연결
-    volumes:
-      - '/home/ubuntu/jenkins-data:/var/jenkins_home'
-      - '/var/run/docker.sock:/var/run/docker.sock' # Docker-in-Docker (보안 주의)
-    environment:
-      - TZ=Asia/Seoul
-    networks:
-      - server_network
-
   vue-app:
     build:
       context: ./frontend
