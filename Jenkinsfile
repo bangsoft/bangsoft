@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Git Clone') {
       steps {
-        git url: 'https://github.com/ORG/REPO.git', credentialsId: 'mygithubtoken'
+        git url: 'https://github.com/bangsoft/bangsoft.git', credentialsId: 'gitbub-token'
       }
     }
     stage('Build Docker Image') {
