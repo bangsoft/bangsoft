@@ -24,8 +24,6 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-    env_file:
-      - ./backend/.env  # 환경변수 관리 권장
     volumes:
       - ./backend:/app
       - /app/node_modules
