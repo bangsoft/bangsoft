@@ -1,4 +1,4 @@
-# 1단계: 빌드 전용
+# 1단계: 빌더
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -7,23 +7,21 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# 소스코드 복사 & 빌드
+# 앱 소스 복사
 COPY . .
 
-# ✅ npx로 빌드 실행 (vite 또는 react 기반 프레임워크 대응)
-RUN npx vite build
-# 또는
-# RUN npx react-scripts build
+# ✅ vue-cli-service 빌드 (npx 사용)
+RUN npx vue-cli-service build
 
-# 2단계: http-server로 정적파일 서빙
+# 2단계: 정적 서버로 제공
 FROM node:20-alpine
 
 WORKDIR /app
 
-# 빌드 결과 복사
+# 정적 빌드 파일 복사
 COPY --from=builder /app/dist ./dist
 
-# ✅ 정적 서버 설치
+# 정적 서버 설치
 RUN npm install -g http-server
 
 EXPOSE 8080
