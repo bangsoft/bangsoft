@@ -7,7 +7,8 @@ services:
       dockerfile: Dockerfile
     container_name: vue-app
     ports:
-      - "3001:3001"
+      - "3001:8080"
+    command: http-server dist -p 8080 -a 0.0.0.0
     volumes:
       - ./frontend:/app
     environment:
