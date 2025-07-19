@@ -1,14 +1,14 @@
 version: '3.7'
 
 services:
-  vue-app:
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: vue-app
+    container_name: frontend
     ports:
       - "3001:8080"
-    command: http-server dist -p 8080 -a 0.0.0.0
+    command: npm start
     volumes:
       - ./frontend:/app
     environment:
