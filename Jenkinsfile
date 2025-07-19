@@ -2,29 +2,27 @@ pipeline {
   agent any
 
   stages {
-    stage('Git Clone') {
+    stage('Checkout Source') {
       steps {
         git branch: 'deploy', url: 'https://github.com/bangsoft/bangsoft.git', credentialsId: 'github-app'
       }
     }
-    stage('Build Docker Image') {
+
+    stage('Clean & Rebuild Containers') {
       steps {
-        sh 'docker-compose build'
-      }
-    }
-    stage('Deploy Service') {
-      steps {
-        sh 'docker-compose down'
-        sh 'docker-compose up -d --build'
+        sh 'docker-compose down --rmi all --volumes --remove-orphans'
+        sh 'docker-compose build --no-cache'
+        sh 'docker-compose up -d'
       }
     }
   }
+
   post {
-    failure {
-      echo '빌드 또는 배포에 실패했습니다. 담당자에게 알림 전송 등.'
-    }
     success {
-      echo '성공적으로 배포 완료.'
+      echo '✅ 배포 성공!'
+    }
+    failure {
+      echo '🚨 빌드 또는 배포 실패. 담당자에게 알림 전송 가능'
     }
   }
 }
